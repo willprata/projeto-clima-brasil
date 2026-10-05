@@ -6,7 +6,9 @@ Este projeto apresenta uma análise de dados climáticos do Brasil entre 2015 e 
 
 A análise considera informações relacionadas à temperatura, chuva, umidade, velocidade do vento, eventos extremos e níveis de alerta.
 
-O projeto também apresenta um dashboard interativo desenvolvido com Streamlit, permitindo explorar os dados por diferentes filtros.
+A base de dados utilizada no projeto é simulada e foi fornecida para a realização da atividade. Portanto, os resultados representam os padrões presentes no conjunto de dados analisado e não medições reais do clima brasileiro.
+
+O projeto também apresenta um dashboard interativo desenvolvido com Streamlit, permitindo explorar os dados por diferentes filtros e visualizar os principais indicadores climáticos.
 
 ## Objetivos
 
@@ -16,24 +18,26 @@ O projeto também apresenta um dashboard interativo desenvolvido com Streamlit, 
 - Identificar padrões temporais e sazonais.
 - Comparar regiões e estados.
 - Analisar eventos extremos.
-- Apresentar os resultados por meio de gráficos.
+- Investigar a relação entre temperatura e chuva.
+- Apresentar os resultados por meio de gráficos e tabelas.
 - Desenvolver um dashboard interativo.
 
 ## Tecnologias utilizadas
 
 - Python
 - Pandas
+- NumPy
 - Matplotlib
 - Seaborn
+- Plotly
 - Streamlit
-- NumPy
 - GitHub
 
 ## Base de dados
 
 A base utilizada no projeto é:
 
-`simulacao_clima_brasil(1).csv`
+`dados/simulacao_clima_brasil.csv`
 
 Os dados abrangem o período de 2015 a 2024.
 
@@ -58,19 +62,28 @@ Entre as principais variáveis estão:
 
 O projeto apresenta análises de:
 
-- Temperatura média ao longo do tempo
-- Chuva total ao longo do tempo
-- Volume de chuva por estado
-- Temperatura média por região
-- Eventos extremos ao longo do tempo
-- Temperatura média por mês e ano
-- Relação entre temperatura e chuva
-- Correlação entre temperatura e chuva
-- Média móvel da temperatura
+- Temperatura média ao longo do tempo.
+- Chuva média mensal por ano.
+- Comparação de temperatura entre regiões.
+- Comparação de volume de chuva entre estados.
+- Identificação de eventos extremos.
+- Eventos extremos por região.
+- Análise sazonal.
+- Temperatura média por mês e ano.
+- Períodos de menor e maior volume de chuva.
+- Relação entre temperatura e chuva.
+- Correlação entre temperatura e chuva.
+- Correlação entre variáveis climáticas.
+- Média móvel da temperatura.
+- Relação entre temperatura e eventos extremos.
+- Análise dos níveis de alerta.
+- Análise de umidade e velocidade do vento.
+- Índice de vulnerabilidade climática por região.
+- Tabela dinâmica para exploração dos dados.
 
 ## Dashboard
 
-O dashboard desenvolvido com Streamlit possui filtros para:
+O dashboard desenvolvido com Streamlit possui filtros interativos para:
 
 - Ano
 - Mês
@@ -79,25 +92,39 @@ O dashboard desenvolvido com Streamlit possui filtros para:
 - Cidade
 - Nível de alerta
 
-Os indicadores apresentados no dashboard incluem:
+Os principais indicadores apresentados incluem:
 
-- Temperatura média
-- Chuva total
+- Temperatura média nacional
+- Volume total de chuva
 - Cidade mais quente
 - Estado mais chuvoso
 - Total de eventos extremos
-- Umidade média
+- Média de umidade
+
+O dashboard também apresenta:
+
+- Análise temporal
+- Comparações entre regiões e estados
+- Análise sazonal
+- Relações climáticas
+- Análise de alertas, vento e umidade
+- Tabela dinâmica dos dados
+- Interpretações textuais
+- Conclusão executiva
 
 ## Estrutura do projeto
 
 ```text
-projeto-g1/
+projeto-clima-brasil/
 ├── app.py
 ├── requirements.txt
 ├── README.md
 ├── index.html
 ├── dados/
-│   └── simulacao_clima_brasil(1).csv
+│   └── simulacao_clima_brasil.csv
 ├── database/
+│   └── .gitkeep
 ├── imagens/
+│   └── .gitkeep
 └── notebooks/
+    └── analise_clima.ipynb
