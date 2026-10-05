@@ -3,43 +3,81 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# =========================
-# LEITURA DOS DADOS
-# =========================
 
-df = pd.read_csv("dados/simulacao_clima_brasil(1).csv")
+# =========================================================
+# CONFIGURAÇÃO
+# =========================================================
 
-df["data"] = pd.to_datetime(df["data"])
-
-# =========================
-# TÍTULO E DESCRIÇÃO
-# =========================
-
-st.title("Dados Climáticos no Brasil")
-
-st.write("**Disciplina:** Linguagem de Programação — Análise e Visualização de Dados com Python")
-st.write("**Professor:** Alexandre Neves Louzada")
-st.write("**Aluno:** Wilson da Silva Prata Junior")
-
-
-st.write(
-    "Este projeto apresenta uma análise dos dados climáticos do Brasil "
-    "entre 2015 e 2024, considerando temperatura, chuva, umidade e "
-    "eventos extremos."
+st.set_page_config(
+    page_title="Dados Climáticos no Brasil",
+    page_icon="🌦️",
+    layout="wide"
 )
 
-# =========================
+
+# =========================================================
+# LEITURA DA BASE
+# =========================================================
+
+@st.cache_data
+def carregar_dados():
+    df = pd.read_csv("dados/simulacao_clima_brasil(1).csv")
+    df["data"] = pd.to_datetime(df["data"])
+
+    return df
+
+
+df = carregar_dados()
+
+
+# =========================================================
+# TÍTULO
+# =========================================================
+
+st.title("🌦️ Dados Climáticos no Brasil")
+
+st.markdown(
+    """
+    **Disciplina:** Linguagem de Programação — Análise e Visualização de Dados com Python
+
+    **Professor:** Alexandre Neves Louzada
+
+    **Aluno:** Wilson da Silva Prata Junior
+    """
+)
+
+st.write(
+    """
+    Este projeto apresenta uma análise dos dados climáticos do Brasil
+    entre 2015 e 2024, considerando temperatura, chuva, umidade,
+    velocidade do vento, eventos extremos e níveis de alerta.
+    """
+)
+
+
+# =========================================================
 # FILTROS
-# =========================
+# =========================================================
 
-st.sidebar.header("Filtros")
+st.sidebar.header("🔎 Filtros")
 
+st.sidebar.write(
+    "Selecione os critérios para explorar os dados."
+)
+
+
+# Ano
 anos = sorted(df["ano"].unique())
-regioes = sorted(df["regiao"].unique())
-estados = sorted(df["uf"].unique())
-cidades = sorted(df["cidade"].unique())
-alertas = sorted(df["nivel_alerta"].unique())
 
+ano_opcoes = ["Todos"] + [str(ano) for ano in anos]
+
+ano_selecionado = st.sidebar.selectbox(
+    "Ano",
+    ano_opcoes
+)
+
+
+# Mês
 meses_nomes = {
     1: "Jan",
     2: "Fev",
@@ -55,154 +93,220 @@ meses_nomes = {
     12: "Dez"
 }
 
-meses_opcoes = list(meses_nomes.values())
+mes_opcoes = ["Todos"] + list(meses_nomes.values())
 
-ano_selecionado = st.sidebar.multiselect(
-    "Ano",
-    anos,
-    default=anos
-)
-
-mes_selecionado = st.sidebar.multiselect(
+mes_selecionado = st.sidebar.selectbox(
     "Mês",
-    meses_opcoes,
-    default=meses_opcoes
+    mes_opcoes
 )
 
-regiao_selecionada = st.sidebar.multiselect(
+
+# Região
+regioes = sorted(df["regiao"].unique())
+
+regiao_opcoes = ["Todas"] + regioes
+
+regiao_selecionada = st.sidebar.selectbox(
     "Região",
-    regioes,
-    default=regioes
+    regiao_opcoes
 )
 
-estado_selecionado = st.sidebar.multiselect(
+
+# Estado
+estados = sorted(df["uf"].unique())
+
+estado_opcoes = ["Todos"] + estados
+
+estado_selecionado = st.sidebar.selectbox(
     "Estado",
-    estados,
-    default=estados
+    estado_opcoes
 )
 
-cidade_selecionada = st.sidebar.multiselect(
+
+# Cidade
+cidades = sorted(df["cidade"].unique())
+
+cidade_opcoes = ["Todas"] + cidades
+
+cidade_selecionada = st.sidebar.selectbox(
     "Cidade",
-    cidades,
-    default=cidades
+    cidade_opcoes
 )
 
-alerta_selecionado = st.sidebar.multiselect(
+
+# Nível de alerta
+alertas = sorted(df["nivel_alerta"].unique())
+
+alerta_opcoes = ["Todos"] + alertas
+
+alerta_selecionado = st.sidebar.selectbox(
     "Nível de alerta",
-    alertas,
-    default=alertas
+    alerta_opcoes
 )
 
-meses_selecionados_num = [
-    numero
-    for numero, nome in meses_nomes.items()
-    if nome in mes_selecionado
-]
 
-# =========================
+# =========================================================
 # APLICAÇÃO DOS FILTROS
-# =========================
+# =========================================================
 
-df_filtrado = df[
-    (df["ano"].isin(ano_selecionado)) &
-    (df["mes"].isin(meses_selecionados_num)) &
-    (df["regiao"].isin(regiao_selecionada)) &
-    (df["uf"].isin(estado_selecionado)) &
-    (df["cidade"].isin(cidade_selecionada)) &
-    (df["nivel_alerta"].isin(alerta_selecionado))
-].copy()
+df_filtrado = df.copy()
 
-# =========================
-# KPIs
-# =========================
 
-st.subheader("Indicadores climáticos")
+if ano_selecionado != "Todos":
+    df_filtrado = df_filtrado[
+        df_filtrado["ano"] == int(ano_selecionado)
+    ]
 
-if len(df_filtrado) > 0:
 
-    temperatura_media = df_filtrado["temperatura_media"].mean()
+if mes_selecionado != "Todos":
 
-    chuva_total = df_filtrado["chuva_mm"].sum()
+    mes_numero = [
+        numero
+        for numero, nome in meses_nomes.items()
+        if nome == mes_selecionado
+    ][0]
 
-    cidade_mais_quente = (
-        df_filtrado.groupby("cidade")["temperatura_media"]
-        .mean()
-        .idxmax()
-    )
+    df_filtrado = df_filtrado[
+        df_filtrado["mes"] == mes_numero
+    ]
 
-    estado_mais_chuvoso = (
-        df_filtrado.groupby("uf")["chuva_mm"]
-        .sum()
-        .idxmax()
-    )
 
-    total_eventos = df_filtrado["eventos_extremos"].sum()
+if regiao_selecionada != "Todas":
+    df_filtrado = df_filtrado[
+        df_filtrado["regiao"] == regiao_selecionada
+    ]
 
-    umidade_media = df_filtrado["umidade"].mean()
 
-    col1, col2, col3 = st.columns(3)
+if estado_selecionado != "Todos":
+    df_filtrado = df_filtrado[
+        df_filtrado["uf"] == estado_selecionado
+    ]
 
-    col1.metric(
-        "Temperatura média",
-        f"{temperatura_media:.2f} °C"
-    )
 
-    col2.metric(
-        "Chuva total",
-        f"{chuva_total:,.2f} mm"
-    )
+if cidade_selecionada != "Todas":
+    df_filtrado = df_filtrado[
+        df_filtrado["cidade"] == cidade_selecionada
+    ]
 
-    col3.metric(
-        "Cidade mais quente",
-        cidade_mais_quente
-    )
 
-    col4, col5, col6 = st.columns(3)
+if alerta_selecionado != "Todos":
+    df_filtrado = df_filtrado[
+        df_filtrado["nivel_alerta"] == alerta_selecionado
+    ]
 
-    col4.metric(
-        "Estado mais chuvoso",
-        estado_mais_chuvoso
-    )
 
-    col5.metric(
-        "Eventos extremos",
-        f"{total_eventos:,.0f}"
-    )
+# =========================================================
+# QUANTIDADE DE REGISTROS
+# =========================================================
 
-    col6.metric(
-        "Umidade média",
-        f"{umidade_media:.2f}%"
-    )
-
-else:
-
-    st.warning(
-        "Nenhum registro encontrado para os filtros selecionados."
-    )
-
-# =========================
-# TABELA
-# =========================
-
-st.subheader("Dados climáticos")
-
-st.write(
+st.caption(
     f"Registros encontrados: {len(df_filtrado)}"
 )
 
-st.dataframe(
-    df_filtrado,
-    use_container_width=True
+
+# =========================================================
+# VERIFICAÇÃO
+# =========================================================
+
+if len(df_filtrado) == 0:
+
+    st.warning(
+        "Nenhum registro foi encontrado com os filtros selecionados."
+    )
+
+    st.stop()
+
+
+# =========================================================
+# KPIs
+# =========================================================
+
+st.header("📌 Indicadores climáticos")
+
+
+temperatura_media = (
+    df_filtrado["temperatura_media"].mean()
 )
 
-# =========================
-# GRÁFICO 1
-# TEMPERATURA AO LONGO DO TEMPO
-# =========================
 
-st.subheader("Temperatura média ao longo do tempo")
+chuva_total = (
+    df_filtrado["chuva_mm"].sum()
+)
 
-if len(df_filtrado) > 0:
+
+cidade_mais_quente = (
+    df_filtrado
+    .groupby("cidade")["temperatura_media"]
+    .mean()
+    .idxmax()
+)
+
+
+estado_mais_chuvoso = (
+    df_filtrado
+    .groupby("uf")["chuva_mm"]
+    .sum()
+    .idxmax()
+)
+
+
+total_eventos = (
+    df_filtrado["eventos_extremos"].sum()
+)
+
+
+umidade_media = (
+    df_filtrado["umidade"].mean()
+)
+
+
+col1, col2, col3 = st.columns(3)
+
+col1.metric(
+    "🌡️ Temperatura média",
+    f"{temperatura_media:.2f} °C"
+)
+
+col2.metric(
+    "🌧️ Chuva total",
+    f"{chuva_total:,.2f} mm"
+)
+
+col3.metric(
+    "🔥 Cidade mais quente",
+    cidade_mais_quente
+)
+
+
+col4, col5, col6 = st.columns(3)
+
+col4.metric(
+    "💧 Estado mais chuvoso",
+    estado_mais_chuvoso
+)
+
+col5.metric(
+    "⚠️ Eventos extremos",
+    f"{total_eventos:,.0f}"
+)
+
+col6.metric(
+    "💨 Umidade média",
+    f"{umidade_media:.2f}%"
+)
+
+
+# =========================================================
+# ANÁLISE TEMPORAL
+# =========================================================
+
+st.header("📈 Análise temporal")
+
+col1, col2 = st.columns(2)
+
+
+# Temperatura por ano
+with col1:
 
     temperatura_ano = (
         df_filtrado
@@ -210,7 +314,7 @@ if len(df_filtrado) > 0:
         .mean()
     )
 
-    fig, ax = plt.subplots(figsize=(10, 5))
+    fig, ax = plt.subplots(figsize=(8, 4))
 
     ax.plot(
         temperatura_ano.index,
@@ -229,14 +333,9 @@ if len(df_filtrado) > 0:
 
     st.pyplot(fig)
 
-# =========================
-# GRÁFICO 2
-# CHUVA AO LONGO DO TEMPO
-# =========================
 
-st.subheader("Chuva total ao longo do tempo")
-
-if len(df_filtrado) > 0:
+# Chuva por ano
+with col2:
 
     chuva_ano = (
         df_filtrado
@@ -244,7 +343,7 @@ if len(df_filtrado) > 0:
         .sum()
     )
 
-    fig, ax = plt.subplots(figsize=(10, 5))
+    fig, ax = plt.subplots(figsize=(8, 4))
 
     ax.bar(
         chuva_ano.index,
@@ -262,14 +361,52 @@ if len(df_filtrado) > 0:
 
     st.pyplot(fig)
 
-# =========================
-# GRÁFICO 3
-# CHUVA POR ESTADO
-# =========================
 
-st.subheader("Volume de chuva por estado")
+# =========================================================
+# COMPARAÇÕES
+# =========================================================
 
-if len(df_filtrado) > 0:
+st.header("🌎 Comparações")
+
+col1, col2 = st.columns(2)
+
+
+# Temperatura por região
+with col1:
+
+    temperatura_regiao = (
+        df_filtrado
+        .groupby("regiao")["temperatura_media"]
+        .mean()
+        .sort_values(ascending=False)
+    )
+
+    fig, ax = plt.subplots(figsize=(8, 4))
+
+    ax.bar(
+        temperatura_regiao.index,
+        temperatura_regiao.values
+    )
+
+    ax.set_title(
+        "Temperatura média por região"
+    )
+
+    ax.set_xlabel("Região")
+    ax.set_ylabel("Temperatura média (°C)")
+
+    ax.tick_params(
+        axis="x",
+        rotation=30
+    )
+
+    ax.grid(axis="y")
+
+    st.pyplot(fig)
+
+
+# Chuva por estado
+with col2:
 
     chuva_estado = (
         df_filtrado
@@ -278,7 +415,7 @@ if len(df_filtrado) > 0:
         .sort_values(ascending=False)
     )
 
-    fig, ax = plt.subplots(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(8, 4))
 
     ax.bar(
         chuva_estado.index,
@@ -301,306 +438,368 @@ if len(df_filtrado) > 0:
 
     st.pyplot(fig)
 
-# =========================
-# GRÁFICO 4
-# TEMPERATURA POR REGIÃO
-# =========================
 
-st.subheader("Temperatura média por região")
-
-if len(df_filtrado) > 0:
-
-    temperatura_regiao = (
-        df_filtrado
-        .groupby("regiao")["temperatura_media"]
-        .mean()
-        .sort_values(ascending=False)
-    )
-
-    fig, ax = plt.subplots(figsize=(10, 5))
-
-    ax.bar(
-        temperatura_regiao.index,
-        temperatura_regiao.values
-    )
-
-    ax.set_title(
-        "Temperatura média por região"
-    )
-
-    ax.set_xlabel("Região")
-    ax.set_ylabel("Temperatura média (°C)")
-
-    ax.grid(axis="y")
-
-    st.pyplot(fig)
-
-# =========================
-# GRÁFICO 5
+# =========================================================
 # EVENTOS EXTREMOS
-# =========================
+# =========================================================
 
-st.subheader("Eventos extremos ao longo do tempo")
+st.header("⚠️ Eventos extremos")
 
-if len(df_filtrado) > 0:
+eventos_ano = (
+    df_filtrado
+    .groupby("ano")["eventos_extremos"]
+    .sum()
+)
 
-    eventos_ano = (
-        df_filtrado
-        .groupby("ano")["eventos_extremos"]
-        .sum()
-    )
 
-    fig, ax = plt.subplots(figsize=(10, 5))
+fig, ax = plt.subplots(figsize=(10, 4))
 
-    ax.bar(
-        eventos_ano.index,
-        eventos_ano.values
-    )
+ax.bar(
+    eventos_ano.index,
+    eventos_ano.values
+)
 
-    ax.set_title(
-        "Eventos extremos ao longo do tempo"
-    )
+ax.set_title(
+    "Eventos extremos ao longo do tempo"
+)
 
-    ax.set_xlabel("Ano")
-    ax.set_ylabel(
-        "Total de eventos extremos"
-    )
+ax.set_xlabel("Ano")
+ax.set_ylabel("Total de eventos extremos")
 
-    ax.grid(axis="y")
+ax.grid(axis="y")
 
-    st.pyplot(fig)
+st.pyplot(fig)
 
-# =========================
-# GRÁFICO 6
-# HEATMAP MENSAL
-# =========================
 
-st.subheader("Temperatura média por mês e ano")
+# =========================================================
+# ANÁLISE MENSAL
+# =========================================================
 
-if len(df_filtrado) > 0:
+st.header("📅 Análise mensal")
 
-    temperatura_mensal = df_filtrado.pivot_table(
+temperatura_mensal = (
+    df_filtrado
+    .pivot_table(
         values="temperatura_media",
         index="mes",
         columns="ano",
         aggfunc="mean"
     )
+)
 
-    temperatura_mensal = temperatura_mensal.reindex(
-        range(1, 13)
-    )
+temperatura_mensal = temperatura_mensal.reindex(
+    range(1, 13)
+)
 
-    temperatura_mensal.index = [
-        meses_nomes[numero]
-        for numero in temperatura_mensal.index
-    ]
+temperatura_mensal.index = [
+    meses_nomes[numero]
+    for numero in temperatura_mensal.index
+]
 
-    fig, ax = plt.subplots(
-        figsize=(12, 6)
-    )
 
-    sns.heatmap(
-        temperatura_mensal,
-        annot=True,
-        fmt=".1f",
-        ax=ax
-    )
+fig, ax = plt.subplots(
+    figsize=(12, 5)
+)
 
-    ax.set_title(
-        "Temperatura média por mês e ano"
-    )
+sns.heatmap(
+    temperatura_mensal,
+    annot=True,
+    fmt=".1f",
+    ax=ax
+)
 
-    ax.set_xlabel("Ano")
-    ax.set_ylabel("Mês")
+ax.set_title(
+    "Temperatura média por mês e ano"
+)
 
-    st.pyplot(fig)
+ax.set_xlabel("Ano")
+ax.set_ylabel("Mês")
 
-# =========================
-# GRÁFICO 7
-# TEMPERATURA X CHUVA
-# =========================
+st.pyplot(fig)
 
-st.subheader(
+
+# =========================================================
+# RELAÇÃO ENTRE TEMPERATURA E CHUVA
+# =========================================================
+
+st.header("🌡️ Relação entre temperatura e chuva")
+
+
+fig, ax = plt.subplots(
+    figsize=(10, 5)
+)
+
+ax.scatter(
+    df_filtrado["temperatura_media"],
+    df_filtrado["chuva_mm"],
+    alpha=0.5,
+    s=20
+)
+
+ax.set_title(
     "Relação entre temperatura média e chuva"
 )
 
-if len(df_filtrado) > 0:
+ax.set_xlabel(
+    "Temperatura média (°C)"
+)
 
-    fig, ax = plt.subplots(
-        figsize=(10, 6)
-    )
+ax.set_ylabel(
+    "Chuva (mm)"
+)
 
-    ax.scatter(
-        df_filtrado["temperatura_media"],
-        df_filtrado["chuva_mm"],
-        alpha=0.5,
-        s=20
-    )
+ax.grid(True)
 
-    ax.set_title(
-        "Relação entre temperatura média e chuva"
-    )
+st.pyplot(fig)
 
-    ax.set_xlabel(
-        "Temperatura média (°C)"
-    )
 
-    ax.set_ylabel(
-        "Chuva (mm)"
-    )
-
-    ax.grid(True)
-
-    st.pyplot(fig)
-
-# =========================
-# ANÁLISE DE CORRELAÇÃO
-# =========================
-
-st.subheader("Correlação entre temperatura e chuva")
-
-if len(df_filtrado) > 1:
-
-    correlacao = (
-        df_filtrado["temperatura_media"]
-        .corr(df_filtrado["chuva_mm"])
-    )
-
-    st.metric(
-        "Correlação temperatura × chuva",
-        f"{correlacao:.2f}"
-    )
-
-    if abs(correlacao) < 0.3:
-        st.write(
-            "A correlação indica uma relação linear fraca "
-            "entre temperatura média e chuva."
-        )
-
-    elif abs(correlacao) < 0.7:
-        st.write(
-            "A correlação indica uma relação linear moderada "
-            "entre temperatura média e chuva."
-        )
-
-    else:
-        st.write(
-            "A correlação indica uma relação linear forte "
-            "entre temperatura média e chuva."
-        )
-
-# =========================
-# ANÁLISE TEMPORAL AVANÇADA
-# =========================
+# =========================================================
+# CORRELAÇÃO ESTATÍSTICA
+# =========================================================
 
 st.subheader(
-    "Média móvel da temperatura"
+    "Correlação entre temperatura e chuva"
 )
 
-if len(df_filtrado) > 0:
 
-    serie_mensal = (
-        df_filtrado
-        .set_index("data")["temperatura_media"]
-        .resample("MS")
-        .mean()
+correlacao = (
+    df_filtrado["temperatura_media"]
+    .corr(df_filtrado["chuva_mm"])
+)
+
+
+st.metric(
+    "Correlação temperatura × chuva",
+    f"{correlacao:.2f}"
+)
+
+
+if abs(correlacao) < 0.3:
+
+    st.write(
+        "A correlação indica uma relação linear fraca "
+        "entre temperatura média e chuva."
     )
 
-    media_movel = serie_mensal.rolling(
-        3
-    ).mean()
+elif abs(correlacao) < 0.7:
 
-    fig, ax = plt.subplots(
-        figsize=(12, 5)
+    st.write(
+        "A correlação indica uma relação linear moderada "
+        "entre temperatura média e chuva."
     )
 
-    ax.plot(
-        serie_mensal.index,
-        serie_mensal.values,
-        label="Temperatura média mensal"
+else:
+
+    st.write(
+        "A correlação indica uma relação linear forte "
+        "entre temperatura média e chuva."
     )
 
-    ax.plot(
-        media_movel.index,
-        media_movel.values,
-        label="Média móvel de 3 meses"
-    )
 
-    ax.set_title(
-        "Evolução mensal da temperatura e média móvel"
-    )
+# =========================================================
+# SÉRIE TEMPORAL AVANÇADA
+# =========================================================
 
-    ax.set_xlabel("Período")
-    ax.set_ylabel(
-        "Temperatura média (°C)"
-    )
+st.header(
+    "📊 Série temporal avançada"
+)
 
-    ax.legend()
-    ax.grid(True)
 
-    st.pyplot(fig)
+serie_mensal = (
+    df_filtrado
+    .set_index("data")["temperatura_media"]
+    .resample("MS")
+    .mean()
+)
 
-# =========================
+
+media_movel = (
+    serie_mensal
+    .rolling(3)
+    .mean()
+)
+
+
+fig, ax = plt.subplots(
+    figsize=(12, 5)
+)
+
+
+ax.plot(
+    serie_mensal.index,
+    serie_mensal.values,
+    label="Temperatura média mensal"
+)
+
+
+ax.plot(
+    media_movel.index,
+    media_movel.values,
+    label="Média móvel de 3 meses"
+)
+
+
+ax.set_title(
+    "Temperatura mensal e média móvel de 3 meses"
+)
+
+ax.set_xlabel("Período")
+
+ax.set_ylabel(
+    "Temperatura média (°C)"
+)
+
+ax.legend()
+
+ax.grid(True)
+
+st.pyplot(fig)
+
+
+# =========================================================
 # INTERPRETAÇÃO
-# =========================
+# =========================================================
 
-st.subheader("Interpretação dos resultados")
-
-if len(df_filtrado) > 0:
-
-    temperatura_ano = (
-        df_filtrado
-        .groupby("ano")["temperatura_media"]
-        .mean()
-    )
-
-    chuva_ano = (
-        df_filtrado
-        .groupby("ano")["chuva_mm"]
-        .sum()
-    )
-
-    eventos_ano = (
-        df_filtrado
-        .groupby("ano")["eventos_extremos"]
-        .sum()
-    )
-
-    ano_mais_quente = temperatura_ano.idxmax()
-    ano_mais_chuvoso = chuva_ano.idxmax()
-    ano_mais_eventos = eventos_ano.idxmax()
-
-    st.write(
-        f"No período selecionado, o ano com maior temperatura "
-        f"média foi {ano_mais_quente}."
-    )
-
-    st.write(
-        f"O maior volume total de chuva foi registrado em "
-        f"{ano_mais_chuvoso}."
-    )
-
-    st.write(
-        f"O maior número de eventos extremos ocorreu em "
-        f"{ano_mais_eventos}."
-    )
-
-# =========================
-# CONCLUSÃO EXECUTIVA
-# =========================
-
-st.subheader("Conclusão executiva")
-
-st.write(
-    "A análise dos dados climáticos permite observar variações "
-    "de temperatura, chuva, umidade e eventos extremos ao longo "
-    "do período analisado. Os filtros permitem comparar diferentes "
-    "anos, meses, regiões, estados, cidades e níveis de alerta, "
-    "facilitando a exploração dos dados."
+st.header(
+    "📝 Interpretação dos resultados"
 )
 
+
+temperatura_ano = (
+    df_filtrado
+    .groupby("ano")["temperatura_media"]
+    .mean()
+)
+
+
+chuva_ano = (
+    df_filtrado
+    .groupby("ano")["chuva_mm"]
+    .sum()
+)
+
+
+eventos_ano = (
+    df_filtrado
+    .groupby("ano")["eventos_extremos"]
+    .sum()
+)
+
+
+ano_mais_quente = (
+    temperatura_ano.idxmax()
+)
+
+
+ano_mais_chuvoso = (
+    chuva_ano.idxmax()
+)
+
+
+ano_mais_eventos = (
+    eventos_ano.idxmax()
+)
+
+
 st.write(
-    "Os indicadores e gráficos apresentados ajudam a identificar "
-    "padrões temporais, diferenças regionais e relações entre as "
-    "variáveis climáticas presentes na base."
+    f"No período selecionado, o ano com maior temperatura "
+    f"média foi **{ano_mais_quente}**."
+)
+
+
+st.write(
+    f"O maior volume total de chuva foi registrado em "
+    f"**{ano_mais_chuvoso}**."
+)
+
+
+st.write(
+    f"O maior número de eventos extremos ocorreu em "
+    f"**{ano_mais_eventos}**."
+)
+
+
+st.write(
+    f"A cidade com maior temperatura média no período filtrado "
+    f"foi **{cidade_mais_quente}**."
+)
+
+
+st.write(
+    f"O estado com maior volume de chuva no período filtrado "
+    f"foi **{estado_mais_chuvoso}**."
+)
+
+
+# =========================================================
+# TABELA
+# =========================================================
+
+st.header(
+    "📋 Tabela de dados"
+)
+
+
+st.write(
+    "A tabela apresenta os registros correspondentes "
+    "aos filtros selecionados."
+)
+
+
+st.dataframe(
+    df_filtrado.head(100),
+    use_container_width=True
+)
+
+
+# =========================================================
+# DOWNLOAD
+# =========================================================
+
+csv_download = df_filtrado.to_csv(
+    index=False
+).encode("utf-8")
+
+
+st.download_button(
+    label="⬇️ Baixar dados filtrados",
+    data=csv_download,
+    file_name="dados_climaticos_filtrados.csv",
+    mime="text/csv"
+)
+
+
+# =========================================================
+# CONCLUSÃO EXECUTIVA
+# =========================================================
+
+st.header(
+    "🎯 Conclusão executiva"
+)
+
+
+st.write(
+    """
+    A análise dos dados climáticos do Brasil entre 2015 e 2024
+    permite observar variações de temperatura, chuva, umidade
+    e eventos extremos ao longo do período.
+    """
+)
+
+
+st.write(
+    """
+    Os filtros permitem comparar diferentes anos, meses, regiões,
+    estados, cidades e níveis de alerta, facilitando a exploração
+    dos dados.
+    """
+)
+
+
+st.write(
+    """
+    Os indicadores e gráficos apresentados contribuem para a
+    identificação de padrões temporais, diferenças regionais
+    e relações entre as variáveis climáticas presentes na base.
+    """
 )
