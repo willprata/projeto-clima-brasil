@@ -8,198 +8,583 @@
     <title>Dados Climáticos no Brasil</title>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        :root {
+            --bg: #06182b;
+            --bg2: #0c2a4a;
+            --card: #0f3157;
+            --line: #1d4f85;
+            --azul: #2f9bff;
+            --ciano: #22d3ee;
+            --verde: #34d399;
+            --laranja: #f59e0b;
+            --vermelho: #f43f5e;
+            --txt: #e6eef8;
+            --mute: #8fb4dd;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
-            background-color: #f5f5f5;
-            color: #222;
+            padding: 0;
         }
 
-        header {
-            background-color: #1f4e79;
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--txt);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background:
+                radial-gradient(900px 500px at 15% -10%, #0b3d78 0%, transparent 60%),
+                radial-gradient(700px 500px at 100% 30%, #0a2f5c 0%, transparent 60%),
+                var(--bg);
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: .25;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .o1 {
+            width: 340px;
+            height: 340px;
+            background: var(--azul);
+            top: 5%;
+            left: -100px;
+        }
+
+        .o2 {
+            width: 280px;
+            height: 280px;
+            background: var(--ciano);
+            top: 55%;
+            right: -100px;
+        }
+
+        nav {
+            position: fixed;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            padding: 8px 12px 8px 20px;
+            border-radius: 999px;
+            background: rgba(12, 42, 74, .75);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(47, 155, 255, .3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+        }
+
+        nav b {
+            margin-right: 12px;
+            font-size: .85rem;
+        }
+
+        nav a {
+            color: var(--mute);
+            text-decoration: none;
+            font-size: .85rem;
+            padding: 8px 13px;
+            border-radius: 999px;
+            transition: .25s;
+        }
+
+        nav a:hover {
             color: white;
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        header h1 {
-            margin: 0 0 15px 0;
-            font-size: 36px;
-        }
-
-        header p {
-            font-size: 18px;
-            margin: 8px 0;
+            background: rgba(47, 155, 255, .2);
         }
 
         section {
-            max-width: 1000px;
-            margin: 30px auto;
-            padding: 25px;
-            background-color: white;
-            border-radius: 10px;
+            max-width: 1100px;
+            margin: auto;
+            padding: 85px 24px;
         }
 
-        h2 {
-            color: #1f4e79;
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 40px;
+            align-items: center;
+            padding-top: 130px;
         }
 
-        ul {
-            line-height: 1.8;
+        .tag {
+            display: inline-block;
+            color: var(--ciano);
+            border: 1px solid rgba(34, 211, 238, .4);
+            padding: 6px 14px;
+            border-radius: 999px;
+            margin-bottom: 18px;
+            font-size: .8rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
         }
 
-        .cards {
+        h1 {
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .grad {
+            background: linear-gradient(90deg, var(--azul), var(--ciano));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            color: var(--mute);
+            font-size: 1.08rem;
+            max-width: 600px;
+        }
+
+        .credito {
+            margin-top: 28px;
+            padding: 15px 20px;
+            border-left: 3px solid var(--ciano);
+            background: rgba(47, 155, 255, .08);
+            border-radius: 0 12px 12px 0;
+            color: var(--mute);
+        }
+
+        .credito b {
+            color: var(--txt);
+        }
+
+        .btns {
+            margin-top: 30px;
             display: flex;
-            gap: 20px;
+            gap: 14px;
             flex-wrap: wrap;
         }
 
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+            transition: .25s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .b1 {
+            background: linear-gradient(90deg, #1d6fd1, var(--azul));
+            box-shadow: 0 10px 28px rgba(47, 155, 255, .3);
+        }
+
+        .b2 {
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid var(--line);
+        }
+
+        .painel {
+            padding: 28px;
+            border-radius: 22px;
+            background: linear-gradient(145deg, rgba(15, 49, 87, .95), rgba(8, 32, 60, .95));
+            border: 1px solid var(--line);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, .35);
+        }
+
+        .painel h3 {
+            margin-bottom: 20px;
+        }
+
+        .mini {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .mini:last-child {
+            border-bottom: none;
+        }
+
+        .mini span {
+            color: var(--mute);
+        }
+
+        .mini strong {
+            color: white;
+        }
+
+        h2 {
+            font-size: clamp(1.7rem, 3vw, 2.4rem);
+            margin-bottom: 10px;
+        }
+
+        .sub {
+            color: var(--mute);
+            margin-bottom: 32px;
+        }
+
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 18px;
+        }
+
+        .kpi {
+            padding: 24px;
+            border-radius: 18px;
+            background: linear-gradient(145deg, var(--card), #0b2542);
+            border: 1px solid var(--line);
+            border-left: 4px solid var(--azul);
+        }
+
+        .kpi:nth-child(2) {
+            border-left-color: var(--ciano);
+        }
+
+        .kpi:nth-child(3) {
+            border-left-color: var(--verde);
+        }
+
+        .kpi:nth-child(4) {
+            border-left-color: var(--laranja);
+        }
+
+        .kpi:nth-child(5) {
+            border-left-color: var(--vermelho);
+        }
+
+        .kpi:nth-child(6) {
+            border-left-color: #a78bfa;
+        }
+
+        .kpi span {
+            color: var(--mute);
+            font-size: .78rem;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+        }
+
+        .kpi strong {
+            display: block;
+            font-size: 1.7rem;
+            margin-top: 8px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
         .card {
-            flex: 1;
-            min-width: 200px;
-            padding: 20px;
-            background-color: #eef4f8;
-            border-radius: 8px;
+            padding: 26px;
+            border-radius: 18px;
+            background: linear-gradient(160deg, rgba(15, 49, 87, .9), rgba(8, 32, 60, .9));
+            border: 1px solid var(--line);
+            transition: .25s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--azul);
+            box-shadow: 0 20px 45px rgba(47, 155, 255, .18);
+        }
+
+        .ico {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            color: var(--mute);
+        }
+
+        .lista {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 12px;
+        }
+
+        .item {
+            padding: 14px 18px;
+            border-radius: 12px;
+            background: rgba(47, 155, 255, .08);
+            border: 1px solid rgba(47, 155, 255, .18);
         }
 
         .links {
             display: flex;
-            gap: 15px;
+            gap: 14px;
             flex-wrap: wrap;
         }
 
-        .links a {
-            display: inline-block;
-            padding: 12px 20px;
-            background-color: #1f4e79;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
+        .cta {
+            text-align: center;
+            padding: 55px 30px;
+            border-radius: 28px;
+            border: 1px solid var(--line);
+            background: linear-gradient(135deg, rgba(29, 111, 209, .3), rgba(34, 211, 238, .1));
         }
 
-        .links a:hover {
-            background-color: #163a5c;
+        .cta .btns {
+            justify-content: center;
         }
 
         footer {
             text-align: center;
-            padding: 25px;
-            background-color: #1f4e79;
-            color: white;
-            margin-top: 30px;
+            color: var(--mute);
+            font-size: .9rem;
+            padding: 35px 20px 50px;
+            border-top: 1px solid rgba(255,255,255,.06);
+        }
+
+        @media (max-width: 850px) {
+            nav {
+                display: none;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding-top: 70px;
+            }
+
+            .hero p {
+                margin: auto;
+            }
+
+            .credito {
+                text-align: left;
+            }
+
+            .btns {
+                justify-content: center;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <header>
+    <div class="orb o1"></div>
+    <div class="orb o2"></div>
 
-        <h1>Dados Climáticos no Brasil</h1>
+    <nav>
+        <b>🌦️ CLIMA BRASIL</b>
+        <a href="#indicadores">Indicadores</a>
+        <a href="#analises">Análises</a>
+        <a href="#tecnologias">Tecnologias</a>
+        <a href="#acesso">Acessar</a>
+    </nav>
 
-        <p>
-            Análise de dados climáticos do Brasil entre 2015 e 2024
-        </p>
+    <section class="hero">
 
-        <p>
-            <strong>Disciplina:</strong>
-            Linguagem de Programação — Análise e Visualização de Dados com Python
-        </p>
+        <div>
 
-        <p>
-            <strong>Professor:</strong>
-            Alexandre Neves Louzada
-        </p>
+            <span class="tag">Python • Pandas • Streamlit</span>
 
-        <p>
-            <strong>Aluno:</strong>
-            Wilson da Silva Prata Junior
-        </p>
+            <h1>
+                Dados Climáticos no Brasil
+                <span class="grad">2015–2024</span>
+            </h1>
 
-    </header>
+            <p>
+                Análise de dados climáticos do Brasil para identificar
+                padrões de temperatura, chuva, eventos extremos,
+                umidade e sazonalidade.
+            </p>
 
-    <section>
+            <div class="btns">
+                <a class="btn b1"
+                   href="https://dados-climaticos-brasil.streamlit.app"
+                   target="_blank">
+                    🚀 Abrir Dashboard
+                </a>
 
-        <h2>Sobre o projeto</h2>
+                <a class="btn b2"
+                   href="https://github.com/willprata/projeto-clima-brasil"
+                   target="_blank">
+                    💻 Repositório GitHub
+                </a>
+            </div>
 
-        <p>
-            Este projeto apresenta uma análise de dados climáticos do Brasil
-            entre 2015 e 2024, utilizando Python para tratamento, análise e
-            visualização dos dados.
-        </p>
+            <div class="credito">
+                <b>Disciplina:</b> Linguagem de Programação — Análise e Visualização de Dados com Python<br>
+                <b>Professor:</b> Alexandre Neves Louzada<br>
+                <b>Aluno:</b> Wilson da Silva Prata Junior
+            </div>
 
-        <p>
-            A análise considera temperatura, chuva, umidade, velocidade do
-            vento, eventos extremos e níveis de alerta.
-        </p>
+        </div>
+
+        <div class="painel">
+
+            <h3>📊 Resumo da análise</h3>
+
+            <div class="mini">
+                <span>Temperatura média</span>
+                <strong>24,99 °C</strong>
+            </div>
+
+            <div class="mini">
+                <span>Chuva total</span>
+                <strong>470.175,10 mm</strong>
+            </div>
+
+            <div class="mini">
+                <span>Cidade mais quente</span>
+                <strong>Vila Velha</strong>
+            </div>
+
+            <div class="mini">
+                <span>Estado mais chuvoso</span>
+                <strong>RJ</strong>
+            </div>
+
+            <div class="mini">
+                <span>Eventos extremos</span>
+                <strong>8.918</strong>
+            </div>
+
+            <div class="mini">
+                <span>Umidade média</span>
+                <strong>66,41%</strong>
+            </div>
+
+        </div>
 
     </section>
 
-    <section>
+    <section id="indicadores">
 
-        <h2>Objetivos</h2>
+        <h2>Os números em <span class="grad">destaque</span></h2>
 
-        <ul>
-            <li>Analisar os dados climáticos do Brasil.</li>
-            <li>Realizar a limpeza e preparação dos dados.</li>
-            <li>Criar indicadores climáticos.</li>
-            <li>Identificar padrões temporais e sazonais.</li>
-            <li>Comparar regiões e estados.</li>
-            <li>Analisar eventos extremos.</li>
-            <li>Apresentar os resultados por meio de gráficos.</li>
-            <li>Desenvolver um dashboard interativo.</li>
-        </ul>
+        <p class="sub">
+            Principais indicadores calculados a partir da base climática analisada.
+        </p>
+
+        <div class="kpis">
+
+            <div class="kpi">
+                <span>Temperatura média nacional</span>
+                <strong>24,99 °C</strong>
+            </div>
+
+            <div class="kpi">
+                <span>Chuva total</span>
+                <strong>470.175,10 mm</strong>
+            </div>
+
+            <div class="kpi">
+                <span>Cidade mais quente</span>
+                <strong>Vila Velha</strong>
+            </div>
+
+            <div class="kpi">
+                <span>Estado mais chuvoso</span>
+                <strong>RJ</strong>
+            </div>
+
+            <div class="kpi">
+                <span>Eventos extremos</span>
+                <strong>8.918</strong>
+            </div>
+
+            <div class="kpi">
+                <span>Umidade média</span>
+                <strong>66,41%</strong>
+            </div>
+
+        </div>
 
     </section>
 
-    <section>
+    <section id="analises">
 
-        <h2>Principais indicadores</h2>
+        <h2>Análises <span class="grad">realizadas</span></h2>
 
-        <div class="cards">
+        <p class="sub">
+            O projeto reúne diferentes análises para facilitar a interpretação dos dados climáticos.
+        </p>
+
+        <div class="grid">
 
             <div class="card">
-
+                <div class="ico">🌡️</div>
                 <h3>Temperatura</h3>
-
                 <p>
-                    Análise da temperatura média e sua evolução ao longo
-                    do período.
+                    Evolução da temperatura média ao longo dos anos
+                    e comparação entre regiões.
                 </p>
-
             </div>
 
             <div class="card">
-
+                <div class="ico">🌧️</div>
                 <h3>Chuva</h3>
-
                 <p>
-                    Análise do volume de chuva ao longo do tempo e
-                    comparação entre estados.
+                    Análise do volume de chuva ao longo do tempo
+                    e comparação entre estados.
                 </p>
-
             </div>
 
             <div class="card">
-
+                <div class="ico">⚠️</div>
                 <h3>Eventos extremos</h3>
-
                 <p>
-                    Análise da ocorrência de eventos extremos durante
-                    o período estudado.
+                    Avaliação da ocorrência de eventos extremos
+                    durante o período analisado.
                 </p>
-
             </div>
 
             <div class="card">
-
-                <h3>Umidade</h3>
-
+                <div class="ico">📅</div>
+                <h3>Sazonalidade</h3>
                 <p>
-                    Análise da umidade média presente nos registros
-                    climáticos.
+                    Comparação das temperaturas por mês e identificação
+                    de padrões sazonais.
                 </p>
+            </div>
 
+            <div class="card">
+                <div class="ico">🔗</div>
+                <h3>Temperatura × chuva</h3>
+                <p>
+                    Análise da relação entre temperatura média e
+                    volume de chuva.
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="ico">🗺️</div>
+                <h3>Comparações regionais</h3>
+                <p>
+                    Comparação dos indicadores climáticos entre
+                    regiões e estados.
+                </p>
             </div>
 
         </div>
@@ -208,47 +593,73 @@
 
     <section>
 
-        <h2>Dashboard interativo</h2>
+        <h2>Filtros do <span class="grad">Dashboard</span></h2>
 
-        <p>
-            O projeto possui um dashboard desenvolvido com Streamlit,
-            permitindo filtrar os dados por ano, mês, região, estado,
-            cidade e nível de alerta.
+        <p class="sub">
+            O painel permite explorar os dados de diferentes formas.
         </p>
 
+        <div class="lista">
+
+            <div class="item">📅 Ano</div>
+            <div class="item">🗓️ Mês</div>
+            <div class="item">🗺️ Região</div>
+            <div class="item">📍 Estado</div>
+            <div class="item">🏙️ Cidade</div>
+            <div class="item">⚠️ Nível de alerta</div>
+
+        </div>
+
+    </section>
+
+    <section id="tecnologias">
+
+        <h2>Tecnologias <span class="grad">utilizadas</span></h2>
+
+        <p class="sub">
+            Ferramentas utilizadas no desenvolvimento da análise e do dashboard.
+        </p>
+
+        <div class="lista">
+
+            <div class="item">🐍 Python</div>
+            <div class="item">🐼 Pandas</div>
+            <div class="item">🔢 NumPy</div>
+            <div class="item">📊 Matplotlib</div>
+            <div class="item">📈 Seaborn</div>
+            <div class="item">📉 Plotly</div>
+            <div class="item">🎈 Streamlit</div>
+            <div class="item">💻 GitHub</div>
+
+        </div>
+
     </section>
 
     <section>
 
-        <h2>Tecnologias utilizadas</h2>
+        <div class="cta">
 
-        <ul>
-            <li>Python</li>
-            <li>Pandas</li>
-            <li>Matplotlib</li>
-            <li>Seaborn</li>
-            <li>Streamlit</li>
-            <li>NumPy</li>
-            <li>GitHub</li>
-        </ul>
+            <h2>Explore os dados <span class="grad">você mesmo</span></h2>
 
-    </section>
+            <p class="sub" style="margin: 15px auto 0;">
+                Acesse o dashboard interativo e o código completo do projeto.
+            </p>
 
-    <section>
+            <div class="btns">
 
-        <h2>Acessos ao projeto</h2>
+                <a class="btn b1"
+                   href="https://dados-climaticos-brasil.streamlit.app"
+                   target="_blank">
+                    🚀 Dashboard Streamlit
+                </a>
 
-        <div class="links">
+                <a class="btn b2"
+                   href="https://github.com/willprata/projeto-clima-brasil"
+                   target="_blank">
+                    💻 Ver código no GitHub
+                </a>
 
-            <!-- Os links serão adicionados após a publicação -->
-
-            <a href="#">
-                GitHub
-            </a>
-
-            <a href="#">
-                Dashboard Streamlit
-            </a>
+            </div>
 
         </div>
 
@@ -257,19 +668,17 @@
     <footer>
 
         <p>
-            Projeto de Análise de Dados Climáticos no Brasil
+            Dados Climáticos no Brasil • 2015–2024
         </p>
 
         <p>
-            Disciplina: Linguagem de Programação — Análise e Visualização de Dados com Python
+            Linguagem de Programação — Análise e Visualização de Dados com Python
+            • Prof. Alexandre Neves Louzada
+            • Wilson da Silva Prata Junior
         </p>
 
-        <p>
-            Professor: Alexandre Neves Louzada
-        </p>
-
-        <p>
-            Aluno: Wilson da Silva Prata Junior
+        <p style="margin-top: 10px;">
+            Base de dados simulada para fins acadêmicos.
         </p>
 
     </footer>

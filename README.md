@@ -2,128 +2,202 @@
 
 ### Painel Analítico de Dados Climáticos (2015–2024)
 
-[![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python&logoColor=white)](https://www.python.org/)
-[![Pandas](https://img.shields.io/badge/Pandas-Data%20Analysis-150458?logo=pandas&logoColor=white)](https://pandas.pydata.org/)
+[![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)](https://www.python.org/)
+[![Pandas](https://img.shields.io/badge/Pandas-Data%20Analysis-150458?logo=pandas)](https://pandas.pydata.org/)
 [![Matplotlib](https://img.shields.io/badge/Matplotlib-Visualization-11557c)](https://matplotlib.org/)
 [![Seaborn](https://img.shields.io/badge/Seaborn-Visualization-4c72b0)](https://seaborn.pydata.org/)
-[![Plotly](https://img.shields.io/badge/Plotly-Interactive%20Charts-3F4F75?logo=plotly&logoColor=white)](https://plotly.com/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
-[![GitHub](https://img.shields.io/badge/GitHub-Versionamento-181717?logo=github&logoColor=white)](https://github.com/)
+[![Plotly](https://img.shields.io/badge/Plotly-Interactive%20Charts-3f4f75?logo=plotly)](https://plotly.com/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-ff4b4b?logo=streamlit)](https://streamlit.io/)
 
-[🌐 **Acessar Dashboard Interativo**](https://dados-climaticos-brasil.streamlit.app/) • [📄 **Ver Landing Page**](https://willprata.github.io/projeto-clima-brasil/)
-
----
-
-## 🎓 Identificação Acadêmica
-
-- **Disciplina:** Linguagem de Programação — Análise e Visualização de Dados com Python
-- **Professor:** Alexandre Neves Louzada
-- **Aluno:** Wilson da Silva Prata Junior
+**[📊 Dashboard no Streamlit](https://dados-climaticos-brasil.streamlit.app)**  
+**[🌐 GitHub Pages](https://willprata.github.io/projeto-clima-brasil/)**  
+**[💻 Repositório no GitHub](https://github.com/willprata/projeto-clima-brasil)**
 
 ---
 
-## 📌 Visão Geral do Projeto
+## 📌 Visão Geral
 
-Este projeto apresenta uma análise de dados climáticos do Brasil entre **2015 e 2024**, utilizando Python para tratamento, análise e visualização dos dados.
+Este projeto apresenta uma análise de dados climáticos do Brasil entre **2015 e 2024**, utilizando Python para tratamento, preparação, análise e visualização dos dados.
 
-A análise busca identificar padrões relacionados à **temperatura, chuva, umidade, velocidade do vento, eventos extremos e níveis de alerta**, além de comparar diferentes regiões e estados brasileiros.
+A base contém informações sobre temperatura, chuva, umidade, velocidade do vento, eventos extremos e níveis de alerta.
 
-O projeto conta com um **dashboard interativo desenvolvido em Streamlit**, permitindo explorar os dados por meio de filtros, indicadores e diferentes visualizações.
+O projeto também conta com um **dashboard interativo desenvolvido com Streamlit**, permitindo explorar os dados por diferentes períodos, regiões, estados, cidades e níveis de alerta.
 
-> ⚠️ **Importante:** a base de dados utilizada é simulada e foi fornecida para a realização da atividade acadêmica. Os resultados representam os padrões encontrados no conjunto de dados analisado e não medições reais do clima brasileiro.
+> ⚠️ **Observação:** a base utilizada é simulada. Portanto, os resultados representam os padrões presentes no conjunto de dados analisado e não devem ser interpretados como medições reais do clima brasileiro.
 
 ---
 
-## 💡 Principais Funcionalidades
+## 👨‍🎓 Identificação Acadêmica
 
-- **📊 Indicadores Climáticos (KPIs):** temperatura média nacional, volume total de chuva, cidade mais quente, estado mais chuvoso, total de eventos extremos e média de umidade.
-- **📈 Análise Temporal:** evolução da temperatura, chuva e eventos extremos ao longo dos anos.
-- **🌎 Comparação Regional:** análise das diferenças de temperatura e eventos entre as regiões brasileiras.
-- **🏙️ Comparação entre Estados:** análise do volume de chuva por estado.
-- **📅 Análise Sazonal:** identificação de padrões de temperatura e chuva ao longo dos meses e estações.
-- **🌡️ Relação entre Variáveis:** análise da relação entre temperatura média e chuva, incluindo cálculo de correlação.
-- **⚠️ Análise de Eventos e Alertas:** exploração dos eventos extremos e níveis de alerta.
-- **💧 Análise de Umidade e Vento:** comparação das condições atmosféricas entre as regiões.
-- **🔎 Filtros Interativos:** exploração por ano, mês, região, estado, cidade e nível de alerta.
-- **📋 Tabela Dinâmica:** visualização detalhada dos registros selecionados.
-- **📥 Exportação:** possibilidade de baixar os dados filtrados diretamente pelo dashboard.
+**Disciplina:** Linguagem de Programação — Análise e Visualização de Dados com Python  
+**Professor:** Alexandre Neves Louzada  
+**Aluno:** Wilson da Silva Prata Junior
+
+---
+
+## 🎯 Objetivos
+
+- Analisar os dados climáticos do Brasil.
+- Realizar a limpeza e preparação dos dados.
+- Criar indicadores climáticos.
+- Identificar padrões temporais e sazonais.
+- Comparar regiões e estados.
+- Analisar eventos extremos.
+- Avaliar a relação entre temperatura e chuva.
+- Apresentar os resultados por meio de gráficos.
+- Desenvolver um dashboard interativo.
 
 ---
 
 ## 📊 Principais Indicadores
 
+Os principais KPIs calculados a partir da base foram:
+
 | Indicador | Resultado |
 |---|---:|
-| 🌡️ Temperatura média nacional | **24,99 °C** |
-| 🌧️ Volume total de chuva | **470.175,10 mm** |
-| 🔥 Cidade mais quente | **Vila Velha** |
-| 💧 Estado mais chuvoso | **RJ** |
-| ⚠️ Total de eventos extremos | **8.918** |
-| 💦 Média de umidade | **66,41%** |
-
-Os indicadores acima consideram a base completa quando nenhum filtro é aplicado.
+| Temperatura média nacional | **24,99 °C** |
+| Chuva total | **470.175,10 mm** |
+| Cidade com maior temperatura média | **Vila Velha** |
+| Estado com maior volume de chuva | **RJ** |
+| Total de eventos extremos | **8.918** |
+| Umidade média | **66,41%** |
 
 ---
 
-## 🎯 Análises Realizadas
+## 📈 Análises Realizadas
 
-O projeto contempla as principais análises propostas para o conjunto de dados:
+### Temperatura ao longo do tempo
 
-- Evolução temporal da temperatura;
-- Evolução temporal das chuvas;
-- Comparação entre regiões;
-- Comparação entre estados;
-- Identificação de eventos extremos;
-- Análise sazonal;
-- Relação entre temperatura e chuva;
-- Interpretação climática dos resultados;
-- Correlação entre temperatura e chuva;
-- Correlação entre variáveis climáticas;
-- Média móvel da temperatura;
-- Relação entre temperatura e eventos extremos;
-- Análise dos níveis de alerta;
-- Análise de umidade e velocidade do vento;
-- Índice de vulnerabilidade climática por região.
+Foi analisada a evolução da temperatura média anual entre 2015 e 2024.
 
----
+O maior valor médio anual foi registrado em **2024, com aproximadamente 25,29 °C**.
 
-## 🔎 Filtros Disponíveis
+### Chuva ao longo do tempo
 
-O dashboard permite realizar análises específicas utilizando:
+Foi analisado o volume total anual de chuva.
 
-- 📅 **Ano**
-- 🗓️ **Mês**
-- 🌎 **Região**
-- 🏙️ **Estado**
-- 📍 **Cidade**
-- ⚠️ **Nível de alerta**
+O maior volume anual ocorreu em **2022, com 48.538,5 mm**, enquanto o menor ocorreu em **2018, com 45.040,3 mm**.
 
-Os indicadores, gráficos e tabelas são atualizados de acordo com os filtros selecionados.
+### Comparação entre estados
 
----
+Foi realizada a comparação do volume total de chuva entre os estados da base.
 
-## 📈 Visualizações
+O **Rio de Janeiro** apresentou o maior volume total de chuva.
 
-Entre as principais visualizações disponíveis estão:
+### Comparação entre regiões
 
-- Linha temporal da temperatura média;
-- Evolução da chuva ao longo dos anos;
-- Volume de chuva por estado;
-- Temperatura média por região;
-- Eventos extremos ao longo do tempo;
-- Heatmap de temperatura por mês e ano;
-- Dispersão entre temperatura média e chuva;
-- Análise de correlação;
-- Análise sazonal;
-- Distribuição dos níveis de alerta;
-- Análise de umidade e velocidade do vento;
-- Tabela dinâmica dos dados.
+Foi analisada a temperatura média das regiões brasileiras presentes na base.
+
+As diferenças entre as médias regionais foram pequenas.
+
+### Eventos extremos
+
+Foi analisada a quantidade de eventos extremos ao longo dos anos.
+
+O maior total ocorreu em **2021, com 924 eventos**.
+
+No período analisado, foram contabilizados **8.918 eventos extremos**.
+
+### Análise sazonal
+
+A análise mensal permitiu observar variações sazonais nas temperaturas.
+
+Na base analisada, **janeiro apresentou a maior temperatura média mensal, com aproximadamente 25,53 °C**, enquanto **abril apresentou a menor, com aproximadamente 24,75 °C**.
+
+### Temperatura × chuva
+
+Foi analisada a relação entre temperatura média e volume de chuva.
+
+A correlação calculada foi de **-0,01**, indicando que não foi observada uma relação linear relevante entre essas duas variáveis na base analisada.
 
 ---
 
-## 📓 Notebook de Análise
+## 🔎 Filtros do Dashboard
 
-A análise exploratória também está disponível no notebook:
+O dashboard permite filtrar os dados por:
+
+- Ano
+- Mês
+- Região
+- Estado
+- Cidade
+- Nível de alerta
+
+Os filtros podem ser combinados para permitir uma análise mais específica dos dados.
+
+---
+
+## 📊 Visualizações
+
+O projeto apresenta diferentes visualizações para facilitar a interpretação dos dados:
+
+- Temperatura média ao longo do tempo.
+- Chuva total ao longo do tempo.
+- Volume de chuva por estado.
+- Temperatura média por região.
+- Eventos extremos ao longo dos anos.
+- Heatmap de temperatura por mês e ano.
+- Relação entre temperatura média e chuva.
+- Correlação entre variáveis climáticas.
+- Distribuição de eventos extremos.
+- Análises de umidade, vento e níveis de alerta.
+- Tabela dinâmica dos dados filtrados.
+
+---
+
+## 🖥️ Dashboard Interativo
+
+O dashboard foi desenvolvido utilizando **Streamlit**.
+
+Ele reúne os principais indicadores, filtros, gráficos e interpretações da análise em uma interface interativa.
+
+### Acesso
+
+**[📊 Abrir Dashboard no Streamlit](https://dados-climaticos-brasil.streamlit.app)**
+
+---
+
+## 📓 Notebook
+
+O projeto possui um notebook de análise desenvolvido em Python, contendo as seguintes etapas:
+
+1. Introdução
+2. Contextualização climática
+3. Explicação da base
+4. Leitura dos dados
+5. Limpeza e preparação
+6. Engenharia de atributos
+7. KPIs
+8. Visualizações
+9. Interpretação
+10. Conclusão
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+- Python
+- Pandas
+- NumPy
+- Matplotlib
+- Seaborn
+- Plotly
+- Streamlit
+- GitHub
+
+---
+
+## 📁 Estrutura do Projeto
 
 ```text
-notebooks/analise_clima.ipynb
+projeto-clima-brasil/
+├── app.py
+├── requirements.txt
+├── README.md
+├── index.html
+├── dados/
+│   └── simulacao_clima_brasil.csv
+├── database/
+├── imagens/
+└── notebooks/
+    └── analise_clima.ipynb
